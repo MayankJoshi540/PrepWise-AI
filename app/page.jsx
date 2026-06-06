@@ -60,7 +60,7 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.05)_0%,transparent_70%)]" aria-hidden="true" />
 
         {/* Layer 1: Content Wrapper */}
-        <div className="relative z-10 flex-1 flex items-center justify-center w-full pt-20 pb-16 lg:pt-28 lg:pb-24">
+        <div className="relative z-10 flex-1 flex items-center justify-center w-full pt-28 pb-16 lg:pt-36 lg:pb-24">
           <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
             
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
