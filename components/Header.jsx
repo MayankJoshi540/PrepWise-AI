@@ -1,3 +1,5 @@
+'use client';
+
 import { Show, UserButton } from '@clerk/nextjs'
 import { ArrowRight } from 'lucide-react'
 import { Button } from './ui/button'

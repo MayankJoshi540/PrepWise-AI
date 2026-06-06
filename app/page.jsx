@@ -74,7 +74,6 @@ export default function Home() {
               >
                 <HeroHeader />
                 <HeroActions />
-                <SocialProof />
               </motion.div>
 
               {/* Right Column: Code Animation - Restricted to Laptop/Desktop */}
@@ -121,6 +120,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* --- COMPANIES MARQUEE SECTION --- */}
+      <CompaniesMarquee />
+
       {/* --- FEATURES SECTION --- */}
       <section className="relative py-24 lg:py-40 bg-black border-t border-white/5">
         <div className="container mx-auto px-6 max-w-7xl">
@@ -145,6 +147,47 @@ export default function Home() {
       </section>
 
     </div>
+  );
+}
+
+function CompaniesMarquee() {
+  const duplicatedLogos = [...LOGOS, ...LOGOS, ...LOGOS];
+
+  return (
+    <section className="relative py-16 bg-black overflow-hidden border-y border-white/5">
+      <div className="container mx-auto px-6 mb-12 text-center">
+        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-white/30">
+          Helping engineers land roles at
+        </p>
+      </div>
+      
+      <div className="relative flex overflow-hidden">
+        <motion.div
+          animate={{ x: ["0%", "-33.33%"] }}
+          transition={{
+            duration: 40,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="flex whitespace-nowrap gap-24 items-center"
+        >
+          {duplicatedLogos.map((logo, idx) => (
+            <div key={`${logo.alt}-${idx}`} className="flex-shrink-0 relative w-[100px] h-6 opacity-70 hover:opacity-100 transition-all duration-500">
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                className="object-contain"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
+      
+      {/* Side gradients for seamless fading effect */}
+      <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
+    </section>
   );
 }
 
@@ -227,32 +270,6 @@ function HeroActions() {
   );
 }
 
-function SocialProof() {
-  return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1, delay: 0.7 }}
-      className="mt-12 w-full border-t border-white/10 pt-8 max-w-md"
-    >
-      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-6">
-        Trusted by engineers from
-      </p>
-      <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-8 gap-y-5 opacity-60 transition-all hover:opacity-100">
-        {LOGOS.slice(0, 7).map((logo) => (
-          <Image
-            key={logo.alt}
-            src={logo.src}
-            alt={logo.alt}
-            width={75}
-            height={22}
-            className="h-4 w-auto object-contain brightness-0 invert sm:h-5"
-          />
-        ))}
-      </div>
-    </motion.div>
-  );
-}
 
 function FeatureCard({ title, description, icon }) {
   return (
