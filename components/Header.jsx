@@ -6,16 +6,16 @@ import Image from 'next/image'
 
 const Header = () => {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.08] bg-black/[0.28] backdrop-blur-2xl">
-      <nav className="mx-auto flex h-[5.3rem] max-w-[1440px] items-center justify-between px-4 sm:px-8 lg:px-10">
-        <Link href="/" className="flex items-center">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.07] bg-black/[0.82] backdrop-blur-xl">
+      <nav className="mx-auto flex h-[5.5rem] w-full max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-12">
+        <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
           <Image
             src="/logo.png"
             alt="PrepWise AI"
-            width={132}
-            height={42}
+            width={200}
+            height={50}
             priority
-            className="h-auto w-[110px] sm:w-[132px]"
+            className="h-9 w-auto object-contain brightness-110 sm:h-10"
           />
         </Link>
 
@@ -24,24 +24,25 @@ const Header = () => {
             <Button
               asChild
               variant="ghost"
-              className="h-11 rounded-full px-3 text-sm font-medium text-white hover:bg-white/[0.06] hover:text-white sm:px-4"
+              className="h-9 rounded-full px-3 text-xs font-medium text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white sm:px-4 sm:text-sm"
             >
               <Link href="/sign-in">Sign In</Link>
             </Button>
             <Button
               asChild
-              className="h-11 rounded-2xl bg-[#f8b81f] px-4 text-sm font-semibold text-black shadow-[0_10px_30px_rgba(248,184,31,0.22)] hover:bg-[#ffc73c] sm:px-5"
+              className="h-9 rounded-full bg-white px-4 text-xs font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98] sm:px-6 sm:text-sm shadow-[0_8px_20px_rgba(255,255,255,0.15)]"
             >
               <Link href="/sign-up">
                 Get started
-                <ArrowRight className="size-4" />
+                <ArrowRight className="ml-1.5 size-3.5" />
               </Link>
             </Button>
           </Show>
 
           <Show when="signed-in">
-            <div className="rounded-full border border-white/10 bg-white/[0.05] p-1 backdrop-blur-xl">
+            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] p-1 pr-3 backdrop-blur-xl">
               <UserButton />
+              <span className="hidden text-xs font-medium text-white/50 sm:block">Dashboard</span>
             </div>
           </Show>
         </div>
