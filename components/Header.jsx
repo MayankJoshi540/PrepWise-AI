@@ -6,43 +6,60 @@ import Image from 'next/image'
 
 const Header = () => {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.07] bg-black/[0.82] backdrop-blur-xl">
-      <nav className="mx-auto flex h-[5.5rem] w-full max-w-[1440px] items-center justify-between px-5 sm:px-8 lg:px-12">
-        <Link href="/" className="flex items-center transition-opacity hover:opacity-90">
+    <header className="fixed inset-x-0 top-6 z-50 flex justify-center px-4">
+      <nav className="group flex h-[4rem] w-full max-w-6xl items-center justify-between rounded-full border border-white/10 bg-white/[0.03] px-6 backdrop-blur-2xl transition-all hover:bg-white/[0.05] hover:border-white/20 sm:px-10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden">
+        
+        {/* Subtle internal golden glow on hover */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
+
+        <Link href="/" className="relative z-10 flex items-center transition-all hover:scale-105 active:scale-95">
           <Image
             src="/logo.png"
             alt="PrepWise AI"
-            width={200}
-            height={50}
+            width={160}
+            height={45}
             priority
-            className="h-9 w-auto object-contain brightness-110 sm:h-10"
+            className="h-8 w-auto object-contain sm:h-9"
           />
         </Link>
 
-        <div className="flex items-center gap-2 sm:gap-4">
+        {/* Center Navigation Links */}
+        <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          {['Features', 'Explore', 'Pricing'].map((item) => (
+            <Link 
+              key={item} 
+              href={`#${item.toLowerCase()}`}
+              className="text-[13px] font-semibold text-white/50 hover:text-white transition-colors tracking-wide uppercase"
+            >
+              {item}
+            </Link>
+          ))}
+        </div>
+
+        <div className="relative z-10 flex items-center gap-3">
           <Show when="signed-out">
             <Button
               asChild
               variant="ghost"
-              className="h-9 rounded-full px-3 text-xs font-medium text-white/70 transition-colors hover:bg-white/[0.06] hover:text-white sm:px-4 sm:text-sm"
+              className="h-10 rounded-full px-4 text-xs font-bold text-white/60 transition-colors hover:bg-white/[0.08] hover:text-white sm:text-sm"
             >
-              <Link href="/sign-in">Sign In</Link>
+              <Link href="/sign-in">Login</Link>
             </Button>
             <Button
               asChild
-              className="h-9 rounded-full bg-white px-4 text-xs font-bold text-black transition-transform hover:scale-[1.02] active:scale-[0.98] sm:px-6 sm:text-sm shadow-[0_8px_20px_rgba(255,255,255,0.15)]"
+              variant="gold"
+              className="h-10 rounded-full px-6 text-xs font-black sm:text-sm shadow-[0_15px_30px_rgba(248,184,31,0.25)] hover:shadow-[0_20px_40px_rgba(248,184,31,0.35)]"
             >
               <Link href="/sign-up">
-                Get started
-                <ArrowRight className="ml-1.5 size-3.5" />
+                Sign Up
               </Link>
             </Button>
           </Show>
 
           <Show when="signed-in">
-            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] p-1 pr-3 backdrop-blur-xl">
+            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] p-1.5 pr-5 backdrop-blur-xl hover:bg-white/[0.06] transition-all cursor-pointer">
               <UserButton />
-              <span className="hidden text-xs font-medium text-white/50 sm:block">Dashboard</span>
+              <span className="hidden text-[11px] font-black text-white/70 sm:block tracking-widest uppercase">Dashboard</span>
             </div>
           </Show>
         </div>
