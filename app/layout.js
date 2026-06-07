@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
             enableSystem
             disableTransitionOnChange>
             <Header />
-            <main className="min-h-screen">{children}</main>
+            <main className="min-h-dvh">{children}</main>
           </ThemeProvider>
         </ClerkProvider>
       </body>
