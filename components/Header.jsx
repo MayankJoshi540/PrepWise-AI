@@ -9,7 +9,7 @@ import Image from 'next/image'
 const Header = () => {
   return (
     <header className="fixed inset-x-0 top-4 md:top-6 z-50 flex justify-center px-4">
-      <nav className="group flex h-[3.5rem] md:h-[4rem] w-full max-w-5xl items-center justify-between rounded-full border border-white/10 bg-white/[0.03] px-4 md:px-8 backdrop-blur-2xl transition-all hover:bg-white/[0.05] hover:border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden">
+      <nav className="group flex h-[3.5rem] md:h-[4rem] w-full max-w-5xl items-center justify-between rounded-full border border-white/10 bg-white/[0.03] px-3 sm:px-6 md:px-8 backdrop-blur-2xl transition-all hover:bg-white/[0.05] hover:border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden">
         
         {/* Subtle internal golden glow on hover */}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
@@ -38,7 +38,7 @@ const Header = () => {
           ))}
         </div>
 
-        <div className="relative z-10 flex items-center gap-3">
+        <div className="relative z-10 flex items-center gap-1.5 sm:gap-3">
           <Show when="signed-out">
             <Button
               asChild

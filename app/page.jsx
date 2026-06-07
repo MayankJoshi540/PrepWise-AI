@@ -44,7 +44,7 @@ export default function Home() {
     <div className="relative min-h-screen bg-black selection:bg-white/20">
       
       {/* --- MAIN HERO SECTION --- */}
-      <section className="relative min-h-screen w-full flex flex-col overflow-hidden">
+      <section className="relative min-h-dvh w-full flex flex-col overflow-hidden">
         
         {/* Layer 0: Background */}
         <div className="absolute inset-0 z-0">
@@ -61,9 +61,9 @@ export default function Home() {
 
         {/* Layer 1: Content Wrapper */}
         <div className="relative z-10 flex-1 flex items-center justify-center w-full pt-28 pb-16 lg:pt-36 lg:pb-24">
-          <div className="container mx-auto px-6 lg:px-12 max-w-7xl">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-12 max-w-7xl">
             
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-16 items-center w-full">
               
               {/* Left Column: Text Content */}
               <motion.div 
@@ -76,12 +76,12 @@ export default function Home() {
                 <HeroActions />
               </motion.div>
 
-              {/* Right Column: Code Animation - Restricted to Laptop/Desktop */}
+              {/* Right Column: Code Animation - Now visible on mobile but with adjustments */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.4 }}
-                className="hidden lg:flex flex-col self-start mt-4 relative group lg:rotate-1 origin-right"
+                className="flex flex-col self-start mt-8 lg:mt-4 relative group lg:rotate-1 origin-right w-full lg:max-w-xl mx-auto lg:mx-0"
               >
                 {/* Golden Glow Backgrounds */}
                 <div className="absolute -inset-4 bg-gradient-to-tr from-[#f8b81f]/20 via-amber-500/20 to-orange-500/20 rounded-[2.5rem] blur-2xl opacity-50 group-hover:opacity-80 transition-opacity duration-700" />
@@ -124,7 +124,7 @@ export default function Home() {
       <CompaniesMarquee />
 
       {/* --- FEATURES SECTION --- */}
-      <section className="relative py-40 max-w-7xl mx-auto px-6 lg:px-12">
+      <section className="relative py-20 sm:py-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         
         {/* Deep Section Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-600/5 rounded-full blur-[160px] pointer-events-none" />
@@ -137,7 +137,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative z-10 grid grid-cols-12 gap-8 lg:gap-10">
+        <div className="relative z-10 grid grid-cols-12 gap-6 sm:gap-10">
           
           {/* Main Hero Bento: AI Co-Pilot */}
           <motion.div 
@@ -349,7 +349,7 @@ function HeroHeader() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="font-serif italic relative text-5xl sm:text-6xl lg:text-[clamp(3.5rem,8vw,6rem)] leading-[0.85] tracking-tight text-white"
+        className="font-serif italic relative text-5xl sm:text-6xl lg:text-[clamp(3.5rem,8vw,6rem)] leading-[1.1] sm:leading-[0.85] tracking-tight text-white"
       >
         <GrayTitle>Ace your next</GrayTitle>
         <br />
@@ -360,7 +360,7 @@ function HeroHeader() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
-        className="relative max-w-lg text-base sm:text-lg lg:text-xl leading-relaxed text-white/60 font-medium"
+        className="relative max-w-full lg:max-w-lg text-base sm:text-lg lg:text-xl leading-relaxed text-white/60 font-medium"
       >
         Practice with senior engineers. Get instant AI insights to land your dream job at top tech companies.
       </motion.p>
@@ -420,7 +420,7 @@ function CompaniesMarquee() {
             repeat: Infinity,
             ease: "linear",
           }}
-          className="flex whitespace-nowrap gap-24 items-center"
+          className="flex whitespace-nowrap gap-12 sm:gap-24 items-center"
         >
           {duplicatedLogos.map((logo, idx) => (
             <div key={`${logo.alt}-${idx}`} className="flex-shrink-0 relative w-[100px] h-6 opacity-70 hover:opacity-100 transition-all duration-500">
@@ -447,7 +447,7 @@ function BentoCard({ icon, title, desc, children, className = "" }) {
     <motion.div
       whileHover={{ y: -8, scale: 1.01 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className={`group relative bg-white/[0.03] border border-white/5 hover:border-amber-400/30 rounded-[3rem] p-10 h-full transition-all duration-700 overflow-hidden backdrop-blur-3xl ${className}`}
+      className={`group relative bg-white/[0.03] border border-white/5 hover:border-amber-400/30 rounded-[2rem] sm:rounded-[3rem] p-5 sm:p-10 h-full transition-all duration-700 overflow-hidden backdrop-blur-3xl ${className}`}
     >
       {/* Mesh Gradient Background */}
       <div className="absolute -inset-[100%] bg-[radial-gradient(circle_at_50%_50%,rgba(248,184,31,0.1),transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
@@ -456,20 +456,20 @@ function BentoCard({ icon, title, desc, children, className = "" }) {
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-50" />
 
       <div className="relative z-10 flex flex-col h-full">
-        <div className="w-16 h-16 rounded-3xl bg-white/[0.02] border border-white/10 flex items-center justify-center text-3xl mb-10 group-hover:scale-110 group-hover:bg-amber-400/10 group-hover:border-amber-400/20 transition-all duration-700 shadow-2xl">
+        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-white/[0.02] border border-white/10 flex items-center justify-center text-2xl sm:text-3xl mb-6 sm:mb-10 group-hover:scale-110 group-hover:bg-amber-400/10 group-hover:border-amber-400/20 transition-all duration-700 shadow-2xl">
           {icon}
         </div>
 
         <div className="space-y-4 mb-auto">
-          <h3 className="text-2xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
             {title}
           </h3>
-          <p className="text-[15px] text-white/30 leading-relaxed font-medium max-w-[320px] group-hover:text-white/50 transition-colors">
+          <p className="text-sm sm:text-[15px] text-white/30 leading-relaxed font-medium max-w-full sm:max-w-[320px] group-hover:text-white/50 transition-colors">
             {desc}
           </p>
         </div>
 
-        <div className="mt-12">
+        <div className="mt-8 sm:mt-12">
           {children}
         </div>
       </div>
