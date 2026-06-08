@@ -2,7 +2,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
 import { Plus_Jakarta_Sans, Instrument_Serif } from "next/font/google";
 import Header from "@/components/Header";
-import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -28,24 +27,20 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${instrumentSerif.variable} ${plusJakartaSans.variable}`
-      }>
+      className={`${instrumentSerif.variable} ${plusJakartaSans.variable} dark`}
+    >
       <body
         suppressHydrationWarning
         className="antialiased"
-        style={{ fontFamily: "var(--font-sans)" }}>
+        style={{ fontFamily: "var(--font-sans)" }}
+      >
         <ClerkProvider
           appearance={{ theme: shadcn }}
           signInUrl="/sign-in"
-          signUpUrl="/sign-up">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange>
-            <Header />
-            <main className="min-h-dvh">{children}</main>
-          </ThemeProvider>
+          signUpUrl="/sign-up"
+        >
+          <Header />
+          <main className="min-h-dvh">{children}</main>
         </ClerkProvider>
       </body>
     </html>

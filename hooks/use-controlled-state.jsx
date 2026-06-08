@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function useControlledState(props) {
   const { value, defaultValue, onChange } = props;
 
   const [state, setInternalState] = React.useState(value !== undefined ? value : (defaultValue));
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (value !== undefined) setInternalState(value);
   }, [value]);
 

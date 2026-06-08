@@ -56,6 +56,7 @@ function Slot(
 
   const mergedProps = mergeProps(childProps, props);
 
+  // eslint-disable-next-line react-hooks/static-components
   return (<Base {...mergedProps} ref={mergeRefs(childRef, ref)} />);
 }
 

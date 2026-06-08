@@ -1,73 +1,157 @@
 'use client';
 
-import { Show, UserButton } from '@clerk/nextjs'
-import { ArrowRight } from 'lucide-react'
-import { Button } from './ui/button'
-import Link from 'next/link'
-import Image from 'next/image'
+import * as React from 'react';
+import { Show, UserButton } from '@clerk/nextjs';
+import { Menu, X, ArrowRight } from 'lucide-react';
+import { Button } from './ui/button';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
+
+const NAV_LINKS = [
+  { label: 'Features', href: '#features' },
+  { label: 'How It Works', href: '#how-it-works' },
+  { label: 'Analytics', href: '#analytics' },
+  { label: 'Pricing', href: '#pricing' },
+];
 
 const Header = () => {
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-4 md:top-6 z-50 flex justify-center px-4">
-      <nav className="group flex h-[3.5rem] md:h-[4rem] w-full max-w-5xl items-center justify-between rounded-full border border-white/10 bg-white/[0.03] px-3 sm:px-6 md:px-8 backdrop-blur-2xl transition-all hover:bg-white/[0.05] hover:border-white/20 shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden">
-        
-        {/* Subtle internal golden glow on hover */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none" />
-
-        <Link href="/" className="relative z-10 flex items-center transition-all hover:scale-105 active:scale-95">
-          <Image
-            src="/logo.png"
-            alt="PrepWise AI"
-            width={160}
-            height={45}
-            priority
-            className="h-8 w-auto object-contain sm:h-9"
-          />
-        </Link>
-
-        {/* Center Navigation Links */}
-        <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-          {['Features', 'Explore', 'Pricing'].map((item) => (
-            <Link 
-              key={item} 
-              href={`#${item.toLowerCase()}`}
-              className="text-[13px] font-semibold text-white/50 hover:text-white transition-colors tracking-wide uppercase"
-            >
-              {item}
-            </Link>
-          ))}
-        </div>
-
-        <div className="relative z-10 flex items-center gap-1.5 sm:gap-3">
-          <Show when="signed-out">
-            <Button
-              asChild
-              variant="ghost"
-              className="h-10 rounded-full px-4 text-xs font-bold text-white/60 transition-colors hover:bg-white/[0.08] hover:text-white sm:text-sm"
-            >
-              <Link href="/sign-in">Login</Link>
-            </Button>
-            <Button
-              asChild
-              variant="gold"
-              className="h-10 rounded-full px-6 text-xs font-black sm:text-sm shadow-[0_15px_30px_rgba(248,184,31,0.25)] hover:shadow-[0_20px_40px_rgba(248,184,31,0.35)]"
-            >
-              <Link href="/sign-up">
-                Sign Up
-              </Link>
-            </Button>
-          </Show>
-
-          <Show when="signed-in">
-            <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] p-1.5 pr-5 backdrop-blur-xl hover:bg-white/[0.06] transition-all cursor-pointer">
-              <UserButton />
-              <span className="hidden text-[11px] font-black text-white/70 sm:block tracking-widest uppercase">Dashboard</span>
+    <header 
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        isScrolled ? "py-3" : "py-6"
+      )}
+    >
+      <div className="container mx-auto px-4 md:px-6">
+        <nav className={cn(
+          "relative flex items-center justify-between transition-all duration-500",
+          "rounded-full border px-4 py-2 md:px-8 md:py-3",
+          isScrolled 
+            ? "glass shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-white/10" 
+            : "border-transparent bg-transparent"
+        )}>
+          {/* Logo */}
+          <Link href="/" className="relative z-10 flex items-center gap-2 group">
+            <div className="relative h-8 w-auto md:h-10">
+              <Image
+                src="/logo.png"
+                alt="PrepWise AI"
+                width={160}
+                height={45}
+                priority
+                className="h-full w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
-          </Show>
-        </div>
-      </nav>
-    </header>
-  )
-}
+          </Link>
 
-export default Header
+          {/* Center Navigation Links (Desktop) */}
+          <div className="hidden lg:flex items-center gap-10">
+            {NAV_LINKS.map((link) => (
+              <Link 
+                key={link.label} 
+                href={link.href}
+                className="text-[12px] font-black text-white/40 hover:text-white transition-all tracking-[0.2em] uppercase"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-3">
+            <Show when="signed-out">
+              <div className="hidden md:flex items-center gap-2">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="h-10 rounded-full px-5 text-xs font-black text-white/50 hover:text-white hover:bg-white/5 tracking-widest uppercase"
+                >
+                  <Link href="/sign-in">Login</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="gold"
+                  className="h-10 rounded-full px-6 text-xs font-black shadow-[0_15px_30px_rgba(248,184,31,0.2)] hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+                >
+                  <Link href="/sign-up">Start Free</Link>
+                </Button>
+              </div>
+            </Show>
+
+            <Show when="signed-in">
+              <div className="flex items-center gap-4 glass p-1.5 pr-5 rounded-full hover:bg-white/10 transition-all cursor-pointer">
+                <UserButton afterSignOutUrl="/" />
+                <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">Dashboard</span>
+              </div>
+            </Show>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="lg:hidden p-2 text-white/60 hover:text-white transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full inset-x-4 mt-4 glass rounded-[2.5rem] p-8 lg:hidden shadow-2xl overflow-hidden"
+          >
+            <div className="flex flex-col gap-8">
+              {NAV_LINKS.map((link) => (
+                <Link 
+                  key={link.label} 
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-lg font-bold text-white/60 hover:text-amber-400 transition-colors tracking-widest uppercase"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="h-px bg-white/10" />
+              <Show when="signed-out">
+                <div className="flex flex-col gap-4">
+                  <Button
+                    asChild
+                    variant="ghost"
+                    className="h-14 rounded-2xl text-sm font-black text-white uppercase tracking-widest bg-white/5"
+                  >
+                    <Link href="/sign-in">Login</Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="gold"
+                    className="h-14 rounded-2xl text-sm font-black uppercase tracking-widest"
+                  >
+                    <Link href="/sign-up">Start Preparing Free</Link>
+                  </Button>
+                </div>
+              </Show>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+};
+
+export default Header;

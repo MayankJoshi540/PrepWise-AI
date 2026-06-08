@@ -13,9 +13,9 @@ const buttonVariants = cva(
         primary:
           "bg-linear-to-br from-indigo-500 via-indigo-600 to-purple-700 text-white shadow-[0_10px_30px_rgba(79,70,229,0.3)] hover:from-indigo-400 hover:to-purple-600 border-indigo-400/20",
         gold:
-          "bg-[#f8b81f] text-black shadow-[0_10px_30px_rgba(248,184,31,0.22)] hover:bg-[#ffc73c]",
+          "bg-linear-to-b from-[#f8b81f] via-[#ffc73c] to-[#f8b81f] text-black shadow-[0_15px_35px_rgba(248,184,31,0.25)] hover:shadow-[0_20px_45px_rgba(248,184,31,0.35)] hover:-translate-y-0.5 border border-white/20 active:translate-y-0 transition-all duration-300",
         outline:
-          "border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-white/10 dark:bg-white/5",
+          "border border-white/10 bg-white/[0.03] backdrop-blur-xl hover:bg-white/[0.08] hover:border-white/20 hover:text-white transition-all duration-300",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:

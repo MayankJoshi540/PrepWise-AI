@@ -31,6 +31,7 @@ function HexagonBackground({
   }, [rowSpacing, hexagonWidth]);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updateGridDimensions();
     window.addEventListener('resize', updateGridDimensions);
     return () => window.removeEventListener('resize', updateGridDimensions);
