@@ -66,10 +66,10 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-10 flex justify-center"
           >
-            <div className="glass px-4 py-1.5 rounded-full flex items-center gap-2 group cursor-pointer hover:border-amber-400/30 transition-all duration-500">
+            <div className="glass px-4 py-1.5 rounded-full flex items-center gap-2 group cursor-pointer hover:border-green-400/30 transition-all duration-500">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400"></span>
               </span>
               <span className="text-[10px] font-black uppercase tracking-[0.25em] text-white/60 group-hover:text-amber-400 transition-colors">
                 Trusted by 5,000+ FAANG Aspirants
