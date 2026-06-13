@@ -7,6 +7,7 @@ import { SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { PLANS } from "@/lib/data";
 
+
 const PLAN_RANK = {
   free: 0,
   starter: 1,
