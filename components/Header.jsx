@@ -10,10 +10,10 @@ import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { label: 'Features', href: '#features' },
-  { label: 'How It Works', href: '#how-it-works' },
-  { label: 'Analytics', href: '#analytics' },
-  { label: 'Pricing', href: '#pricing' },
+  { label: 'Live Demo', href: '#interactive' },
+  { label: 'label1', href: '#features' },
+  { label: 'label2', href: '#features' },
+  { label: 'label3', href: '#features' },
 ];
 
 const Header = () => {
