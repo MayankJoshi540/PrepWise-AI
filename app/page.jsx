@@ -7,8 +7,7 @@ import {
   TrustSection, 
   InteractiveSection, 
   FeaturesSection, 
-  CTASection, 
-  Footer 
+  CTASection 
 } from "@/components/home";
 
 /**
@@ -28,7 +27,6 @@ export default function Home() {
       <InteractiveSection />
       <FeaturesSection />
       <CTASection />
-      <Footer />
     </div>
   );
 }

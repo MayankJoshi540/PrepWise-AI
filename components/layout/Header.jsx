@@ -1,24 +1,25 @@
 'use client';
 
 import * as React from 'react';
-import { Show, UserButton } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
+import { Show, UserButton, SignInButton, SignUpButton } from '@clerk/nextjs';
 import { Menu, X, ArrowRight } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { label: 'Live Demo', href: '#interactive' },
-  { label: 'label1', href: '#features' },
-  { label: 'label2', href: '#features' },
-  { label: 'label3', href: '#features' },
+  { label: 'Home', href: '/' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Live Demo', href: '/#interactive' },
 ];
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const pathname = usePathname();
 
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -61,9 +62,18 @@ const Header = () => {
               <Link 
                 key={link.label} 
                 href={link.href}
-                className="text-[12px] font-black text-white/40 hover:text-white transition-all tracking-[0.2em] uppercase"
+                className={cn(
+                  "text-[12px] font-black transition-all tracking-[0.2em] uppercase relative group",
+                  pathname === link.href ? "text-amber-400" : "text-white/40 hover:text-white"
+                )}
               >
                 {link.label}
+                {pathname === link.href && (
+                  <motion.div 
+                    layoutId="nav-underline"
+                    className="absolute -bottom-1 left-0 right-0 h-px bg-amber-400/50"
+                  />
+                )}
               </Link>
             ))}
           </div>
@@ -72,20 +82,22 @@ const Header = () => {
           <div className="flex items-center gap-3">
             <Show when="signed-out">
               <div className="hidden md:flex items-center gap-2">
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="h-10 rounded-full px-5 text-xs font-black text-white/50 hover:text-white hover:bg-white/5 tracking-widest uppercase"
-                >
-                  <Link href="/sign-in">Login</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="gold"
-                  className="h-10 rounded-full px-6 text-xs font-black shadow-[0_15px_30px_rgba(248,184,31,0.2)] hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
-                >
-                  <Link href="/sign-up">Start Free</Link>
-                </Button>
+                <SignInButton mode="modal">
+                  <Button
+                    variant="ghost"
+                    className="h-10 rounded-full px-5 text-xs font-black text-white/50 hover:text-white hover:bg-white/5 tracking-widest uppercase"
+                  >
+                    Login
+                  </Button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <Button
+                    variant="gold"
+                    className="h-10 rounded-full px-6 text-xs font-black shadow-[0_15px_30px_rgba(248,184,31,0.2)] hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+                  >
+                    Start Free
+                  </Button>
+                </SignUpButton>
               </div>
             </Show>
 
@@ -122,7 +134,10 @@ const Header = () => {
                   key={link.label} 
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-lg font-bold text-white/60 hover:text-amber-400 transition-colors tracking-widest uppercase"
+                  className={cn(
+                    "text-lg font-bold transition-colors tracking-widest uppercase",
+                    pathname === link.href ? "text-amber-400" : "text-white/60 hover:text-white"
+                  )}
                 >
                   {link.label}
                 </Link>
@@ -130,20 +145,22 @@ const Header = () => {
               <div className="h-px bg-white/10" />
               <Show when="signed-out">
                 <div className="flex flex-col gap-4">
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="h-14 rounded-2xl text-sm font-black text-white uppercase tracking-widest bg-white/5"
-                  >
-                    <Link href="/sign-in">Login</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="gold"
-                    className="h-14 rounded-2xl text-sm font-black uppercase tracking-widest"
-                  >
-                    <Link href="/sign-up">Start Preparing Free</Link>
-                  </Button>
+                  <SignInButton mode="modal">
+                    <Button
+                      variant="ghost"
+                      className="h-14 rounded-2xl text-sm font-black text-white uppercase tracking-widest bg-white/5"
+                    >
+                      Login
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
+                    <Button
+                      variant="gold"
+                      className="h-14 rounded-2xl text-sm font-black uppercase tracking-widest"
+                    >
+                      Start Preparing Free
+                    </Button>
+                  </SignUpButton>
                 </div>
               </Show>
             </div>

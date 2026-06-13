@@ -1,7 +1,8 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadcn } from "@clerk/ui/themes";
 import { Plus_Jakarta_Sans, Instrument_Serif } from "next/font/google";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }) {
         >
           <Header />
           <main className="min-h-dvh">{children}</main>
+          <Footer />
         </ClerkProvider>
       </body>
     </html>
