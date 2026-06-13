@@ -9,6 +9,7 @@ import {
   FeaturesSection, 
   CTASection 
 } from "@/components/home";
+import { SectionHeading, SectionLabel } from "@/components/reusables";
 
 /**
  * HOME PAGE - ELITE REDESIGN

@@ -19,6 +19,9 @@ import {
   Target
 } from "lucide-react";
 
+// Components
+import PricingSection from "@/components/PricingSection";
+
 // Background
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
 
@@ -98,7 +101,7 @@ export default function PricingPage() {
       </div>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative pt-48 pb-24 overflow-hidden z-10">
+      <section className="relative pt-48 pb-24 overflow-hidden">
         <div className="container mx-auto px-4 text-center">
           <SectionLabel>Pricing Plans</SectionLabel>
           <motion.h1 
@@ -139,130 +142,15 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* --- HARDCODED PRICING SECTION --- */}
-      <section className="relative py-24 z-10">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {[
-              {
-                name: "Free",
-                price: "0",
-                description: "Perfect for getting started and exploring the platform.",
-                features: [
-                  "5 AI Interviews per month",
-                  "Basic performance feedback",
-                  "Access to standard roles",
-                  "Community support"
-                ],
-                buttonText: "Start Free",
-                popular: false
-              },
-              {
-                name: "Pro",
-                price: "29",
-                description: "Accelerate your preparation with unlimited practice.",
-                features: [
-                  "Unlimited AI Interviews",
-                  "Advanced technical feedback",
-                  "Role-specific coaching",
-                  "Coding interview support",
-                  "Priority support"
-                ],
-                buttonText: "Go Pro",
-                popular: true
-              },
-              {
-                name: "Ultra",
-                price: "59",
-                description: "The ultimate preparation for elite FAANG roles.",
-                features: [
-                  "Everything in Pro",
-                  "FAANG-level simulations",
-                  "System design practice",
-                  "Personalized roadmaps",
-                  "1-on-1 resume review",
-                  "Lifetime access to updates"
-                ],
-                buttonText: "Choose Ultra",
-                popular: false
-              }
-            ].map((plan, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className={cn(
-                  "relative flex flex-col p-8 md:p-10 rounded-[3rem] glass transition-all duration-500 border-white/5",
-                  plan.popular ? "border-amber-400/20 shadow-[0_0_40px_rgba(248,184,31,0.1)] scale-105 z-20" : "hover:border-white/10"
-                )}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-amber-400 rounded-full">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-black">Most Popular</span>
-                  </div>
-                )}
-                
-                <div className="mb-8">
-                  <h3 className="text-xl font-black text-white uppercase tracking-widest mb-2">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-black text-white tracking-tighter">${plan.price}</span>
-                    <span className="text-sm font-medium text-white/40">/month</span>
-                  </div>
-                  <p className="mt-4 text-sm font-medium text-white/40 leading-relaxed">{plan.description}</p>
-                </div>
-
-                <div className="flex-1 space-y-4 mb-10">
-                  {plan.features.map((feature, j) => (
-                    <div key={j} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full glass flex items-center justify-center border-white/10 shrink-0">
-                        <CheckCircle2 size={12} className="text-amber-400" />
-                      </div>
-                      <span className="text-sm font-medium text-white/60 tracking-tight">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <Show when="signed-out">
-                  <SignUpButton mode="modal">
-                    <Button 
-                      variant={plan.popular ? "gold" : "ghost"} 
-                      className={cn(
-                        "w-full h-14 rounded-2xl text-xs font-black uppercase tracking-widest transition-all",
-                        !plan.popular && "bg-white/5 border border-white/10 hover:bg-white/10"
-                      )}
-                    >
-                      {plan.buttonText}
-                    </Button>
-                  </SignUpButton>
-                </Show>
-
-                <Show when="signed-in">
-                  <Link href="/" className="w-full">
-                    <Button 
-                      variant={plan.popular ? "gold" : "ghost"} 
-                      className={cn(
-                        "w-full h-14 rounded-2xl text-xs font-black uppercase tracking-widest transition-all",
-                        !plan.popular && "bg-white/5 border border-white/10 hover:bg-white/10"
-                      )}
-                    >
-                      Go to Dashboard
-                    </Button>
-                  </Link>
-                </Show>
-
-                {plan.popular && (
-                  <div className="absolute inset-0 -z-10 bg-amber-400/5 blur-3xl rounded-[3rem]" />
-                )}
-              </motion.div>
-            ))}
-          </div>
+      {/* --- DYNAMIC PRICING SECTION --- */}
+      <section className="relative py-24">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <PricingSection />
         </div>
       </section>
 
       {/* --- WHY UPGRADE SECTION --- */}
-      <section className="relative py-32 z-10">
+      <section className="relative py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-24">
             <SectionLabel>Premium Experience</SectionLabel>
@@ -328,7 +216,7 @@ export default function PricingPage() {
       {/* --- ROI SECTION --- */}
 
       {/* --- TESTIMONIALS --- */}
-      <section className="relative py-32 z-10">
+      <section className="relative py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-24">
             <SectionLabel>Social Proof</SectionLabel>
@@ -370,7 +258,7 @@ export default function PricingPage() {
       </section>
 
       {/* --- FAQ SECTION --- */}
-      <section className="relative py-32 z-10">
+      <section className="relative py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-24">

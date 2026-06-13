@@ -3,6 +3,7 @@ import { shadcn } from "@clerk/ui/themes";
 import { Plus_Jakarta_Sans, Instrument_Serif } from "next/font/google";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { checkUser } from "@/lib/checkUser";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -23,7 +24,9 @@ export const metadata = {
   description: "PrepWise AI with Clerk authentication.",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  await checkUser();
+
   return (
     <html
       lang="en"
