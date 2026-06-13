@@ -24,6 +24,8 @@ export const metadata = {
   description: "PrepWise AI with Clerk authentication.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({ children }) {
   await checkUser();
 
