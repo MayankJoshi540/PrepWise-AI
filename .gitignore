@@ -46,6 +46,9 @@ next-env.d.ts
 /lib/generated/prisma
 proxy.js
 
+# AI Context
+context.md
+
 /lib/generated/prisma
 
 /lib/generated/prisma

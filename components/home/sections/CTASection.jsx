@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from "react";
-import { Show, SignUpButton } from "@clerk/nextjs";
+import { SignUpButton } from "@clerk/nextjs";
+import { Show } from "@/components/auth";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { GoldTitle } from "@/components/reusables";

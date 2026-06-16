@@ -4,7 +4,8 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
-import { Show, SignUpButton } from "@clerk/nextjs";
+import { SignUpButton } from "@clerk/nextjs";
+import { Show } from "@/components/auth";
 import { 
   CheckCircle2, 
   ArrowRight, 
