@@ -27,7 +27,11 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function RootLayout({ children }) {
-  await checkUser();
+  try {
+    await checkUser();
+  } catch (error) {
+    console.error("Failed to sync user:", error);
+  }
 
   return (
     <html

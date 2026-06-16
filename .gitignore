@@ -44,7 +44,6 @@ next-env.d.ts
 /.clerk/
 
 /lib/generated/prisma
-proxy.js
 
 # AI Context
 context.md

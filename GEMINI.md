@@ -14,7 +14,8 @@ These rules are foundational mandates for all development and AI-assisted tasks 
 - **Source:** Always import `Show` from `@/components/auth`.
 
 ## Tech Stack & Conventions
-- **Next.js:** 15+ (App Router).
+- **Next.js:** 16+ (App Router).
 - **Styling:** Tailwind CSS 4, Framer Motion.
+- **Middleware:** Use `proxy.js` instead of `middleware.js` (standard for Next.js 16).
 - **Design:** Strict Dark Mode with Gold/Amber accents (`#f8b81f`).
 - **Typography:** Instrument Serif (Headers), Plus Jakarta Sans (Body).
