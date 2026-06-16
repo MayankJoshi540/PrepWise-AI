@@ -74,7 +74,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"
         >
-          <Link href="/sign-up" className="w-full sm:w-auto">
+          <Link href="/onboarding" className="w-full sm:w-auto">
             <Button variant="gold" className="h-16 w-full sm:w-64 rounded-2xl text-base font-black uppercase tracking-widest shadow-[0_20px_60px_rgba(248,184,31,0.3)]">
               Start Preparing Free
             </Button>

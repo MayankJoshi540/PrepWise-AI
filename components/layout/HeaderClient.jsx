@@ -4,7 +4,7 @@ import * as React from 'react';
 import { usePathname } from 'next/navigation';
 import { UserButton, SignInButton, SignUpButton } from '@clerk/nextjs';
 import { Show } from '@/components/auth';
-import { Menu, X, ArrowUpCircle, LayoutDashboard } from 'lucide-react';
+import { Menu, X, ArrowUpCircle, LayoutDashboard, Compass, Calendar } from 'lucide-react';
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -107,18 +107,37 @@ const HeaderClient = ({ user }) => {
 
             <Show when="signed-in">
               <div className="flex items-center gap-3">
-                {/* Universal Dashboard Link */}
-                <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
-                  <Link href="/dashboard">
-                    <LayoutDashboard size={14} />
-                    <span className="hidden md:inline">Dashboard</span>
-                  </Link>
-                </Button>
+                {/* Conditional Links based on Role */}
+                {user?.role === 'INTERVIEWER' ? (
+                  <>
+                    <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
+                      <Link href="/explore">
+                        <Compass size={14} />
+                        <span className="hidden md:inline">Explore</span>
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
+                      <Link href="/appointments">
+                        <Calendar size={14} />
+                        <span className="hidden md:inline">My Appointments</span>
+                      </Link>
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
+                    <Link href="/dashboard">
+                      <LayoutDashboard size={14} />
+                      <span className="hidden md:inline">Dashboard</span>
+                    </Link>
+                  </Button>
+                )}
 
                 {/* Custom Credit Button Component */}
-                <div className="hidden sm:block">
+                {user?.role ==='INTERVIEWEE' && (
+                  <div className="hidden sm:block">
                   <CreditButton role={user?.role} credits={user?.credits} />
                 </div>
+                )}
 
                 {/* Upgrade Button (Only for Interviewees/Unassigned) */}
                 {user?.role !== 'INTERVIEWER' && (
@@ -242,11 +261,26 @@ const HeaderClient = ({ user }) => {
                     
                     <div className="h-px bg-white/10 my-2" />
                     
-                    <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
-                        <LayoutDashboard size={18} /> My Dashboard
-                      </Button>
-                    </Link>
+                    {user?.role === 'INTERVIEWER' ? (
+                      <div className="flex flex-col gap-3">
+                        <Link href="/explore" onClick={() => setIsMobileMenuOpen(false)}>
+                          <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
+                            <Compass size={18} /> Explore
+                          </Button>
+                        </Link>
+                        <Link href="/appointments" onClick={() => setIsMobileMenuOpen(false)}>
+                          <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
+                            <Calendar size={18} /> My Appointments
+                          </Button>
+                        </Link>
+                      </div>
+                    ) : (
+                      <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                        <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
+                          <LayoutDashboard size={18} /> My Dashboard
+                        </Button>
+                      </Link>
+                    )}
                  </div>
               </Show>
             </div>
