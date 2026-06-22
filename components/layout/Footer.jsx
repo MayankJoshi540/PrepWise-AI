@@ -3,8 +3,31 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isDashboard = pathname?.startsWith("/dashboard") || 
+                      pathname?.startsWith("/appointments") || 
+                      pathname?.startsWith("/explore") || 
+                      pathname?.startsWith("/call") || 
+                      pathname?.startsWith("/session") || 
+                      pathname?.startsWith("/onboarding");
+
+  if (isDashboard) {
+    return (
+      <footer className="border-t border-white/5 bg-[#050505] py-6 mt-auto">
+        <div className="container mx-auto px-6 max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/20">
+          <p>© {new Date().getFullYear()} PrepWise AI. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
+            <Link href="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="border-t border-white/5 bg-black pt-20 pb-10">
       <div className="container mx-auto px-6 max-w-6xl">

@@ -44,6 +44,7 @@ const HeaderClient = ({ user }) => {
 
     // INTERVIEWEE or UNASSIGNED
     return [
+      { label: 'Home', href: '/' },
       { label: 'Dashboard', href: '/dashboard' },
       { label: 'Explore', href: '/explore' },
       { label: 'Pricing', href: '/pricing' },
@@ -87,7 +88,7 @@ const HeaderClient = ({ user }) => {
           </Link>
 
           {/* Center Navigation Links (Desktop) */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
             {navLinks.map((link) => {
               const active = isActive(link.href);
               return (
@@ -180,7 +181,7 @@ const HeaderClient = ({ user }) => {
 
             {/* Mobile Menu Toggle */}
             <button 
-              className="lg:hidden p-2 text-white/60 hover:text-white transition-colors"
+              className="md:hidden p-2 text-white/60 hover:text-white transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -203,7 +204,7 @@ const HeaderClient = ({ user }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full inset-x-4 mt-4 glass rounded-[2.5rem] p-8 lg:hidden shadow-2xl overflow-hidden border border-white/10"
+            className="absolute top-full inset-x-4 mt-4 glass rounded-[2.5rem] p-8 md:hidden shadow-2xl overflow-hidden border border-white/10"
           >
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-4">

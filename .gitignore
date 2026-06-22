@@ -50,4 +50,11 @@ context.md
 
 /lib/generated/prisma
 
-/lib/generated/prisma
+# Agent, editor & local workspace configs (unrelated to Vercel deployment)
+.agents/
+skills-lock.json
+.vscode/
+.next-dev.log
+CLAUDE.md
+GEMINI.md
+AGENTS.md
