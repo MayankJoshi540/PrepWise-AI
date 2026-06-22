@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   }
 
   if (user.role === "INTERVIEWER") {
-    redirect("/explore");
+    redirect("/appointments");
   }
 
   // Fetch active (scheduled) sessions count

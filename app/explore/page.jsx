@@ -1,8 +1,17 @@
 import { getInterviewers } from "@/actions/explore";
 import { SectionHeading, SectionLabel } from "@/components/reusables";
 import ExploreGrid from "./components/ExploreGrid";
+import { checkUser } from "@/lib/checkUser";
+import { redirect } from "next/navigation";
 
 export default async function ExplorePage() {
+  const user = await checkUser();
+
+  // Interviewers are not allowed to browse other interviewers for bookings
+  if (user && user.role === "INTERVIEWER") {
+    redirect("/appointments");
+  }
+
   const interviewers = await getInterviewers();
 
   return (
@@ -23,4 +32,4 @@ export default async function ExplorePage() {
       </div>
     </main>
   );
-}
+}
