@@ -28,7 +28,7 @@ export default function OnboardingForm() {
   useEffect(() => {
     if (data && !loading) {
       if (data.role === "INTERVIEWER") {
-        router.push("/explore");
+        router.push("/appointments");
       } else {
         router.push("/dashboard");
       }
@@ -229,7 +229,7 @@ export default function OnboardingForm() {
               ? "Setting up your account…"
               : role === "INTERVIEWER"
               ? "Create interviewer profile →"
-              : "Go to dashboard →"}
+              : "Explore Interviewers →"}
           </Button>
         </div>
       )}

@@ -15,7 +15,7 @@ export default async function OnboardingPage() {
   if (user.role === "INTERVIEWEE") {
     redirect("/dashboard");
   } else if (user.role === "INTERVIEWER") {
-    redirect("/explore");
+    redirect("/appointments");
   }
 
   return (

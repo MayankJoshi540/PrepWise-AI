@@ -8,8 +8,37 @@ import { StarsBackground } from "@/components/animate-ui/components/backgrounds/
 import { Button } from "@/components/ui/button";
 import { GoldTitle } from "@/components/reusables";
 import HeroProductPreview from "../Hero/HeroProductPreview";
+import { useAuth } from "@clerk/nextjs";
+import { getDbUserRole } from "@/actions/user";
 
 export default function HeroSection() {
+  const { isLoaded, userId } = useAuth();
+  const [role, setRole] = React.useState(null);
+
+  React.useEffect(() => {
+    if (isLoaded && userId) {
+      getDbUserRole().then((userRole) => {
+        if (userRole) {
+          setRole(userRole);
+        }
+      });
+    } else {
+      setRole(null);
+    }
+  }, [isLoaded, userId]);
+
+  let buttonText = "Start Preparing Free";
+  let buttonLink = "/onboarding";
+
+  if (isLoaded && userId) {
+    if (role === "INTERVIEWEE") {
+      buttonText = "Practise interviews";
+      buttonLink = "/dashboard";
+    } else if (role === "INTERVIEWER") {
+      buttonText = "Take Interviews";
+      buttonLink = "/appointments";
+    }
+  }
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-12 overflow-hidden">
       
@@ -74,9 +103,9 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"
         >
-          <Link href="/onboarding" className="w-full sm:w-auto">
+          <Link href={buttonLink} className="w-full sm:w-auto">
             <Button variant="gold" className="h-16 w-full sm:w-64 rounded-2xl text-base font-black uppercase tracking-widest shadow-[0_20px_60px_rgba(248,184,31,0.3)]">
-              Start Preparing Free
+              {buttonText}
             </Button>
           </Link>
           <Link href="#interactive" className="w-full sm:w-auto">

@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { checkUser } from "@/lib/checkUser";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const instrumentSerif = Instrument_Serif({
   subsets: ["latin"],
@@ -51,6 +52,7 @@ export default async function RootLayout({ children }) {
         >
           <Header />
           <main className="min-h-dvh">{children}</main>
+          <Toaster richColors/>
           <Footer />
         </ClerkProvider>
       </body>

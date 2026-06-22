@@ -13,12 +13,6 @@ import { cn } from '@/lib/utils';
 import CreditButton from '@/components/CreditButton';
 import UpgradeModal from '@/components/UpgradeModal';
 
-const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Live Demo', href: '/#interactive' },
-];
-
 const HeaderClient = ({ user }) => {
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -31,24 +25,56 @@ const HeaderClient = ({ user }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const navLinks = React.useMemo(() => {
+    if (!user) {
+      return [
+        { label: 'Home', href: '/' },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Live Demo', href: '/#interactive' },
+      ];
+    }
+
+    if (user.role === 'INTERVIEWER') {
+      return [
+        { label: 'Home', href: '/' },
+        { label: 'Appointments', href: '/appointments' },
+        { label: 'Pricing', href: '/pricing' },
+      ];
+    }
+
+    // INTERVIEWEE or UNASSIGNED
+    return [
+      { label: 'Dashboard', href: '/dashboard' },
+      { label: 'Explore', href: '/explore' },
+      { label: 'Pricing', href: '/pricing' },
+    ];
+  }, [user]);
+
+  const isActive = React.useCallback((linkHref) => {
+    if (linkHref === '/') {
+      return pathname === '/';
+    }
+    return pathname === linkHref || pathname.startsWith(linkHref + '/');
+  }, [pathname]);
+
   return (
     <header 
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        isScrolled ? "py-3" : "py-6"
+        isScrolled ? "py-3" : "py-5"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
         <nav className={cn(
-          "relative flex items-center justify-between transition-all duration-500",
-          "rounded-full border px-4 py-2 md:px-8 md:py-3",
+          "relative flex items-center justify-between transition-all duration-300",
+          "rounded-full border px-4 py-2 md:px-6 md:py-2.5",
           isScrolled 
-            ? "glass shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-white/10" 
-            : "border-transparent bg-transparent"
+            ? "bg-black/60 backdrop-blur-md border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.5)]" 
+            : "bg-black/10 backdrop-blur-sm border-white/5 shadow-sm"
         )}>
           {/* Logo */}
           <Link href="/" className="relative z-10 flex items-center gap-2 group">
-            <div className="relative h-8 w-auto md:h-10">
+            <div className="relative h-8 w-auto md:h-10 flex items-center">
               <Image
                 src="/logo.png"
                 alt="PrepWise AI"
@@ -61,35 +87,39 @@ const HeaderClient = ({ user }) => {
           </Link>
 
           {/* Center Navigation Links (Desktop) */}
-          <div className="hidden lg:flex items-center gap-10">
-            {NAV_LINKS.map((link) => (
-              <Link 
-                key={link.label} 
-                href={link.href}
-                className={cn(
-                  "text-[12px] font-black transition-all tracking-[0.2em] uppercase relative group",
-                  pathname === link.href ? "text-amber-400" : "text-white/40 hover:text-white"
-                )}
-              >
-                {link.label}
-                {pathname === link.href && (
-                  <motion.div 
-                    layoutId="nav-underline"
-                    className="absolute -bottom-1 left-0 right-0 h-px bg-amber-400/50"
-                  />
-                )}
-              </Link>
-            ))}
+          <div className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <Link 
+                  key={link.label} 
+                  href={link.href}
+                  className={cn(
+                    "text-[11px] font-bold transition-all tracking-[0.2em] uppercase relative py-2 px-1 group",
+                    active ? "text-amber-400" : "text-white/40 hover:text-white"
+                  )}
+                >
+                  {link.label}
+                  {active && (
+                    <motion.div 
+                      layoutId="nav-underline"
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-linear-to-r from-amber-400 to-amber-500 rounded-full shadow-[0_0_8px_rgba(248,184,31,0.5)]"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-3">
             <Show when="signed-out">
-              <div className="hidden md:flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2.5">
                 <SignInButton mode="modal">
                   <Button
                     variant="ghost"
-                    className="h-10 rounded-full px-5 text-xs font-black text-white/50 hover:text-white hover:bg-white/5 tracking-widest uppercase"
+                    className="h-10 rounded-full px-5 text-xs font-bold text-white/50 hover:text-white hover:bg-white/5 tracking-widest uppercase transition-all duration-300"
                   >
                     Login
                   </Button>
@@ -97,7 +127,7 @@ const HeaderClient = ({ user }) => {
                 <SignUpButton mode="modal">
                   <Button
                     variant="gold"
-                    className="h-10 rounded-full px-6 text-xs font-black shadow-[0_15px_30px_rgba(248,184,31,0.2)] hover:scale-[1.02] active:scale-95 transition-all uppercase tracking-widest"
+                    className="h-10 rounded-full px-6 text-xs font-bold uppercase tracking-widest transition-all duration-300"
                   >
                     Start Free
                   </Button>
@@ -107,36 +137,15 @@ const HeaderClient = ({ user }) => {
 
             <Show when="signed-in">
               <div className="flex items-center gap-3">
-                {/* Conditional Links based on Role */}
-                {user?.role === 'INTERVIEWER' ? (
-                  <>
-                    <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
-                      <Link href="/explore">
-                        <Compass size={14} />
-                        <span className="hidden md:inline">Explore</span>
-                      </Link>
-                    </Button>
-                    <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
-                      <Link href="/appointments">
-                        <Calendar size={14} />
-                        <span className="hidden md:inline">My Appointments</span>
-                      </Link>
-                    </Button>
-                  </>
-                ) : (
-                  <Button variant="ghost" className="h-10 rounded-full px-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white gap-2" asChild>
-                    <Link href="/dashboard">
-                      <LayoutDashboard size={14} />
-                      <span className="hidden md:inline">Dashboard</span>
-                    </Link>
-                  </Button>
-                )}
-
                 {/* Custom Credit Button Component */}
-                {user?.role ==='INTERVIEWEE' && (
+                {user?.role === 'INTERVIEWEE' && (
                   <div className="hidden sm:block">
-                  <CreditButton role={user?.role} credits={user?.credits} />
-                </div>
+                    <CreditButton 
+                      role={user?.role} 
+                      credits={user?.credits} 
+                      className="h-10 rounded-full px-5 text-[10px]"
+                    />
+                  </div>
                 )}
 
                 {/* Upgrade Button (Only for Interviewees/Unassigned) */}
@@ -144,23 +153,23 @@ const HeaderClient = ({ user }) => {
                   <div className="hidden md:block">
                     <Button 
                       onClick={() => setIsUpgradeModalOpen(true)}
-                      className="h-10 rounded-full px-5 bg-linear-to-r from-amber-400 to-amber-600 text-black text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-lg"
+                      className="h-10 rounded-full px-5 bg-linear-to-r from-amber-400 to-amber-600 text-black text-[10px] font-bold uppercase tracking-widest hover:scale-[1.03] hover:shadow-lg active:scale-95 transition-all duration-300"
                     >
-                      <ArrowUpCircle size={14} className="mr-2" />
+                      <ArrowUpCircle size={14} className="mr-1.5" />
                       Upgrade
                     </Button>
                   </div>
                 )}
 
                 {/* Profile Section */}
-                <div className="flex items-center gap-4 glass p-1.5 pr-5 rounded-full hover:bg-white/10 transition-all cursor-pointer">
+                <div className="h-10 flex items-center gap-2.5 pl-1.5 pr-4 rounded-full glass hover:bg-white/10 hover:border-white/20 transition-all duration-300 cursor-pointer">
                   <UserButton afterSignOutUrl="/" />
                   <div className="flex flex-col">
-                     <span className="text-[10px] font-black text-white tracking-widest uppercase truncate max-w-[100px]">
+                     <span className="text-[10px] font-bold text-white tracking-widest uppercase truncate max-w-[80px]">
                         {user?.name?.split(' ')[0] || 'User'}
                      </span>
                      {user?.role !== 'UNASSIGNED' && (
-                       <span className="text-[8px] font-bold text-amber-400/60 uppercase tracking-tighter">
+                       <span className="text-[8px] font-semibold text-amber-400/60 uppercase tracking-wider">
                           {user?.role}
                        </span>
                      )}
@@ -194,29 +203,36 @@ const HeaderClient = ({ user }) => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full inset-x-4 mt-4 glass rounded-[2.5rem] p-8 lg:hidden shadow-2xl overflow-hidden"
+            className="absolute top-full inset-x-4 mt-4 glass rounded-[2.5rem] p-8 lg:hidden shadow-2xl overflow-hidden border border-white/10"
           >
             <div className="flex flex-col gap-8">
-              {NAV_LINKS.map((link) => (
-                <Link 
-                  key={link.label} 
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={cn(
-                    "text-lg font-bold transition-colors tracking-widest uppercase",
-                    pathname === link.href ? "text-amber-400" : "text-white/60 hover:text-white"
-                  )}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              <div className="flex flex-col gap-4">
+                {navLinks.map((link) => {
+                  const active = isActive(link.href);
+                  return (
+                    <Link 
+                      key={link.label} 
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "text-lg font-bold transition-colors tracking-widest uppercase py-1",
+                        active ? "text-amber-400" : "text-white/60 hover:text-white"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+
               <div className="h-px bg-white/10" />
+
               <Show when="signed-out">
                 <div className="flex flex-col gap-4">
                   <SignInButton mode="modal">
                     <Button
                       variant="ghost"
-                      className="h-14 rounded-2xl text-sm font-black text-white uppercase tracking-widest bg-white/5"
+                      className="h-14 rounded-2xl text-sm font-bold text-white uppercase tracking-widest bg-white/5 hover:bg-white/10 transition-all duration-300"
                     >
                       Login
                     </Button>
@@ -224,7 +240,7 @@ const HeaderClient = ({ user }) => {
                   <SignUpButton mode="modal">
                     <Button
                       variant="gold"
-                      className="h-14 rounded-2xl text-sm font-black uppercase tracking-widest"
+                      className="h-14 rounded-2xl text-sm font-bold uppercase tracking-widest hover:scale-[1.01] active:scale-[0.99] transition-all duration-300"
                     >
                       Start Preparing Free
                     </Button>
@@ -233,19 +249,25 @@ const HeaderClient = ({ user }) => {
               </Show>
 
               <Show when="signed-in">
-                 <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2 mb-4">
-                       <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Account</span>
+                 <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                       <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Account</span>
                        <div className="flex items-center gap-3 glass p-3 rounded-2xl">
                           <UserButton afterSignOutUrl="/" />
                           <div className="flex flex-col">
                              <span className="text-sm font-bold text-white">{user?.name}</span>
-                             <span className="text-[10px] font-medium text-amber-400/60 uppercase tracking-widest">{user?.role}</span>
+                             <span className="text-[10px] font-semibold text-amber-400/60 uppercase tracking-widest">{user?.role}</span>
                           </div>
                        </div>
                     </div>
                     
-                    <CreditButton role={user?.role} credits={user?.credits} />
+                    {user?.role === 'INTERVIEWEE' && (
+                      <CreditButton 
+                        role={user?.role} 
+                        credits={user?.credits} 
+                        className="h-14 w-full rounded-2xl text-xs"
+                      />
+                    )}
                     
                     {user?.role !== 'INTERVIEWER' && (
                       <Button 
@@ -253,33 +275,10 @@ const HeaderClient = ({ user }) => {
                           setIsMobileMenuOpen(false);
                           setIsUpgradeModalOpen(true);
                         }}
-                        className="h-14 w-full rounded-2xl bg-linear-to-r from-amber-400 to-amber-600 text-black text-xs font-black uppercase tracking-widest"
+                        className="h-14 w-full rounded-2xl bg-linear-to-r from-amber-400 to-amber-600 text-black text-xs font-bold uppercase tracking-widest hover:scale-[1.01] active:scale-[0.99] transition-all duration-300"
                       >
                         Upgrade Plan
                       </Button>
-                    )}
-                    
-                    <div className="h-px bg-white/10 my-2" />
-                    
-                    {user?.role === 'INTERVIEWER' ? (
-                      <div className="flex flex-col gap-3">
-                        <Link href="/explore" onClick={() => setIsMobileMenuOpen(false)}>
-                          <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
-                            <Compass size={18} /> Explore
-                          </Button>
-                        </Link>
-                        <Link href="/appointments" onClick={() => setIsMobileMenuOpen(false)}>
-                          <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
-                            <Calendar size={18} /> My Appointments
-                          </Button>
-                        </Link>
-                      </div>
-                    ) : (
-                      <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant="ghost" className="w-full h-14 rounded-2xl text-sm font-black uppercase tracking-widest bg-white/5 gap-3">
-                          <LayoutDashboard size={18} /> My Dashboard
-                        </Button>
-                      </Link>
                     )}
                  </div>
               </Show>
