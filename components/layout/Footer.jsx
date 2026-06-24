@@ -7,6 +7,10 @@ import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
+  
+  const isCallPage = pathname?.startsWith('/call/');
+  if (isCallPage) return null;
+
   const isDashboard = pathname?.startsWith("/dashboard") || 
                       pathname?.startsWith("/appointments") || 
                       pathname?.startsWith("/explore") || 

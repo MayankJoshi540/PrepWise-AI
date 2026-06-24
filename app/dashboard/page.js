@@ -189,7 +189,7 @@ export default async function DashboardPage() {
                       </div>
                       {booking.streamCallId && (
                         <Button variant="gold" size="sm" className="rounded-lg text-[10px] uppercase font-black tracking-wider" asChild>
-                          <Link href={`/session/${booking.streamCallId}`}>
+                          <Link href={`/call/${booking.streamCallId}`}>
                             Join Call
                           </Link>
                         </Button>

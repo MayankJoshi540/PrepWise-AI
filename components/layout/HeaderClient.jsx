@@ -19,6 +19,8 @@ const HeaderClient = ({ user }) => {
   const [isUpgradeModalOpen, setIsUpgradeModalOpen] = React.useState(false);
   const pathname = usePathname();
 
+  const isCallPage = pathname?.startsWith('/call/');
+
   React.useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
@@ -57,6 +59,8 @@ const HeaderClient = ({ user }) => {
     }
     return pathname === linkHref || pathname.startsWith(linkHref + '/');
   }, [pathname]);
+
+  if (isCallPage) return null;
 
   return (
     <header 
