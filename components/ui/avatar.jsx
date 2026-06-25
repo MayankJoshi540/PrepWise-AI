@@ -11,11 +11,11 @@ function Avatar({
   ...props
 }) {
   return (
-    <AvatarPrimitive.Root
+    <div
       data-slot="avatar"
       data-size={size}
       className={cn(
-        "group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border after:mix-blend-darken data-[size=lg]:size-10 data-[size=sm]:size-6 dark:after:mix-blend-lighten",
+        "group/avatar relative flex size-8 shrink-0 rounded-full select-none overflow-hidden",
         className
       )}
       {...props} />
@@ -24,12 +24,42 @@ function Avatar({
 
 function AvatarImage({
   className,
+  src,
+  alt,
+  onLoad,
+  onError,
   ...props
 }) {
+  const [loaded, setLoaded] = React.useState(false);
+  const imgRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setLoaded(true);
+    }
+  }, [src]);
+
+  if (!src) return null;
+
   return (
-    <AvatarPrimitive.Image
+    <img
+      ref={imgRef}
       data-slot="avatar-image"
-      className={cn("aspect-square size-full rounded-full object-cover", className)}
+      src={src}
+      alt={alt || "Avatar"}
+      onLoad={(e) => {
+        setLoaded(true);
+        if (onLoad) onLoad(e);
+      }}
+      onError={(e) => {
+        setLoaded(false);
+        if (onError) onError(e);
+      }}
+      className={cn(
+        "aspect-square size-full rounded-full object-cover absolute inset-0 z-10 transition-opacity duration-200",
+        loaded ? "opacity-100" : "opacity-0",
+        className
+      )}
       {...props} />
   );
 }
@@ -39,7 +69,7 @@ function AvatarFallback({
   ...props
 }) {
   return (
-    <AvatarPrimitive.Fallback
+    <div
       data-slot="avatar-fallback"
       className={cn(
         "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",

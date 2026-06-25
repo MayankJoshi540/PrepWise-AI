@@ -18,6 +18,12 @@ export async function getInterviewers() {
         bio: true,
         categories: true,
         creditRate: true,
+        availabilities: {
+          select: {
+            startTime: true,
+            endTime: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

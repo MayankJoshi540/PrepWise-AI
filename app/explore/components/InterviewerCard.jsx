@@ -31,7 +31,7 @@ export default function InterviewerCard({ interviewer }) {
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             <Avatar className="w-11 h-11 border border-white/10 shrink-0">
-              <AvatarImage src={imageUrl} alt={name} />
+              <AvatarImage src={imageUrl || `https://api.dicebear.com/9.x/glass/svg?seed=${id}&backgroundColor=111113`} alt={name} />
               <AvatarFallback className="bg-amber-400/10 border border-amber-400/20 text-amber-400 text-sm font-medium">
                 {name?.[0] ?? "?"}
               </AvatarFallback>
