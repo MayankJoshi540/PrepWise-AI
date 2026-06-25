@@ -41,7 +41,21 @@ export const getInterviewerProfile = async (interviewerId) => {
       },
     });
 
-    return interviewer ?? null;
+    if (!interviewer) return null;
+
+    return {
+      ...interviewer,
+      availabilities: interviewer.availabilities.map((a) => ({
+        ...a,
+        startTime: a.startTime.toISOString(),
+        endTime: a.endTime.toISOString(),
+      })),
+      bookingsAsInterviewer: interviewer.bookingsAsInterviewer.map((b) => ({
+        ...b,
+        startTime: b.startTime.toISOString(),
+        endTime: b.endTime.toISOString(),
+      })),
+    };
   } catch (err) {
     console.error("getInterviewerProfile error:", err);
     throw new Error("Failed to fetch interviewer profile");
@@ -216,7 +230,16 @@ export const completeBooking = async (bookingId) => {
       revalidatePath(`/call/${booking.streamCallId}`);
     }
 
-    return { success: true, booking: updatedBooking };
+    return {
+      success: true,
+      booking: {
+        ...updatedBooking,
+        startTime: updatedBooking.startTime.toISOString(),
+        endTime: updatedBooking.endTime.toISOString(),
+        createdAt: updatedBooking.createdAt.toISOString(),
+        updatedAt: updatedBooking.updatedAt.toISOString(),
+      },
+    };
   } catch (err) {
     console.error("completeBooking error:", err);
     throw new Error("Failed to complete booking");
