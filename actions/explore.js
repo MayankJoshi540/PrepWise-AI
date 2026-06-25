@@ -30,7 +30,14 @@ export async function getInterviewers() {
       },
     });
 
-    return interviewers;
+    return interviewers.map((i) => ({
+      ...i,
+      availabilities: i.availabilities.map((a) => ({
+        ...a,
+        startTime: a.startTime.toISOString(),
+        endTime: a.endTime.toISOString(),
+      })),
+    }));
   } catch (error) {
     console.error("Error fetching interviewers:", error);
     return [];

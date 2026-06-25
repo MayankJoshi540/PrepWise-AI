@@ -118,7 +118,7 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
       data: {
         created_by_id: dbUser.clerkUserId,
         members: [
-          { user_id: dbUser.clerkUserId, role: "call-member" },
+          { user_id: dbUser.clerkUserId, role: "user" },
           { user_id: interviewer.clerkUserId, role: "host" },
         ],
         settings_override: {
