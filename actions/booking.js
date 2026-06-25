@@ -182,3 +182,43 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
     throw new Error("Booking failed. Please try again.");
   }
 };
+
+export const completeBooking = async (bookingId) => {
+  const user = await currentUser();
+  if (!user) throw new Error("Unauthorized");
+
+  const booking = await db.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      interviewer: true,
+      interviewee: true,
+    },
+  });
+
+  if (!booking) throw new Error("Booking not found");
+
+  if (
+    booking.interviewer.clerkUserId !== user.id &&
+    booking.interviewee.clerkUserId !== user.id
+  ) {
+    throw new Error("Forbidden");
+  }
+
+  try {
+    const updatedBooking = await db.booking.update({
+      where: { id: bookingId },
+      data: { status: "COMPLETED" },
+    });
+
+    revalidatePath("/dashboard");
+    revalidatePath("/appointments");
+    if (booking.streamCallId) {
+      revalidatePath(`/call/${booking.streamCallId}`);
+    }
+
+    return { success: true, booking: updatedBooking };
+  } catch (err) {
+    console.error("completeBooking error:", err);
+    throw new Error("Failed to complete booking");
+  }
+};

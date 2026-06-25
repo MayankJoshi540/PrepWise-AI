@@ -42,6 +42,12 @@ export default function CallRoom({
         image: currentUser.imageUrl,
       },
       token,
+      options: {
+        logOptions: {
+          default: { level: "error" },
+          coordinator: { level: "error" },
+        },
+      },
     });
 
     const callInstance = client.call("default", callId);
