@@ -66,10 +66,31 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
   const user = await currentUser();
   if (!user) throw new Error("Unauthorized");
 
+  // ── Environment variable validation ────────────────────────────────────────
+  if (!process.env.DATABASE_URL) {
+    console.error("CRITICAL ERROR: DATABASE_URL environment variable is missing.");
+    throw new Error("Database service is currently unconfigured. Please try again later.");
+  }
+  if (!process.env.NEXT_PUBLIC_STREAM_API_KEY || !process.env.STREAM_SECRET_KEY) {
+    console.error("CRITICAL ERROR: NEXT_PUBLIC_STREAM_API_KEY or STREAM_SECRET_KEY is missing.");
+    throw new Error("Video communication service is currently unconfigured. Please try again later.");
+  }
+  // ──────────────────────────────────────────────────────────────────────────
+
   // ── Arcjet rate limit ──────────────────────────────────────────────────────
-  // const req = await request();
-  // const rateLimitError = await checkRateLimit(bookingLimiter, req, user.id);
-  // if (rateLimitError) throw new Error(rateLimitError);
+  try {
+    const req = await request();
+    const rateLimitError = await checkRateLimit(bookingLimiter, req, user.id);
+    if (rateLimitError) throw new Error(rateLimitError);
+  } catch (err) {
+    if (
+      err.message === "Too many requests. Please try again later." ||
+      err.message === "Request blocked by rate limiter."
+    ) {
+      throw err;
+    }
+    console.error("Arcjet rate limit check failed (bypassing):", err);
+  }
   // ──────────────────────────────────────────────────────────────────────────
 
   const [dbUser, interviewer] = await Promise.all([

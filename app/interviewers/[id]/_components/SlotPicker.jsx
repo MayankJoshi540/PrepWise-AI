@@ -8,6 +8,7 @@ import { bookSlot } from "@/actions/booking";
 import useFetch from "@/hooks/use-fetch";
 import UpgradeModal from "@/components/UpgradeModal";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 import {
   CalendarDays,
   Clock,
@@ -72,8 +73,14 @@ export default function SlotPicker({ interviewer, interviewerCredits, userCredit
     return generateSlots(selectedDate, availability.startTime, availability.endTime, interviewer.bookingsAsInterviewer ?? [], SLOT_DURATION_MINUTES);
   }, [selectedDate, availability, interviewer.bookingsAsInterviewer]);
 
+  const [isNavigating, setIsNavigating] = useState(false);
+
   useEffect(() => {
-    if (data?.success && data.streamCallId) router.push("/appointments");
+    if (data?.success && data.streamCallId) {
+      setIsNavigating(true);
+      toast.success("Mock session booked successfully!");
+      router.push("/dashboard");
+    }
   }, [data, router]);
 
   const handleDateChange = (date) => { setSelectedDate(date); setSelectedSlot(null); };
@@ -259,11 +266,11 @@ export default function SlotPicker({ interviewer, interviewerCredits, userCredit
                 )}
 
                 <div className="flex gap-3 mt-1">
-                  <Button variant="outline" className="flex-1 h-12 rounded-xl border-white/10 text-white/60 hover:text-white glass text-xs font-black uppercase tracking-widest cursor-pointer hover:border-white/20 transition-all" disabled={loading} onClick={() => setSelectedSlot(null)}>
+                  <Button variant="outline" className="flex-1 h-12 rounded-xl border-white/10 text-white/60 hover:text-white glass text-xs font-black uppercase tracking-widest cursor-pointer hover:border-white/20 transition-all" disabled={loading || isNavigating} onClick={() => setSelectedSlot(null)}>
                     Cancel
                   </Button>
-                  <Button className="flex-1 h-12 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-black uppercase tracking-widest cursor-pointer border-0 shadow-[0_0_20px_-5px_rgba(248,184,31,0.5)] transition-all hover:scale-[1.02]" disabled={loading} onClick={handleConfirm}>
-                    {loading ? "Confirming..." : "Confirm →"}
+                  <Button className="flex-1 h-12 rounded-xl bg-amber-400 hover:bg-amber-300 text-black text-xs font-black uppercase tracking-widest cursor-pointer border-0 shadow-[0_0_20px_-5px_rgba(248,184,31,0.5)] transition-all hover:scale-[1.02]" disabled={loading || isNavigating} onClick={handleConfirm}>
+                    {loading || isNavigating ? "Confirming..." : "Confirm →"}
                   </Button>
                 </div>
               </div>
