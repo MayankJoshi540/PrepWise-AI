@@ -207,7 +207,7 @@ export function AppointmentCard({ booking, mode, isPast = false, onFullFeedback 
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border border-white/10 rounded-xl">
-                <AvatarImage src={person?.imageUrl} />
+                <AvatarImage src={person?.imageUrl || `https://api.dicebear.com/9.x/glass/svg?seed=${encodeURIComponent(person?.name || 'Avatar')}&backgroundColor=111113`} />
                 <AvatarFallback className="bg-[#f8b81f]/10 border border-[#f8b81f]/20 text-[#f8b81f] font-bold text-sm">
                   {person?.name?.[0] ?? "?"}
                 </AvatarFallback>
@@ -392,7 +392,7 @@ export function AppointmentCard({ booking, mode, isPast = false, onFullFeedback 
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <Avatar className="w-12 h-12 border border-white/10 rounded-xl">
-              <AvatarImage src={person?.imageUrl} />
+              <AvatarImage src={person?.imageUrl || `https://api.dicebear.com/9.x/glass/svg?seed=${encodeURIComponent(person?.name || 'Avatar')}&backgroundColor=111113`} />
               <AvatarFallback className="bg-[#f8b81f]/10 border border-[#f8b81f]/20 text-[#f8b81f] font-bold text-sm">
                 {person?.name?.[0] ?? "?"}
               </AvatarFallback>

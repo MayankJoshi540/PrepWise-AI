@@ -26,38 +26,24 @@ function AvatarImage({
   className,
   src,
   alt,
-  onLoad,
   onError,
   ...props
 }) {
-  const [loaded, setLoaded] = React.useState(false);
-  const imgRef = React.useRef(null);
+  const [hasError, setHasError] = React.useState(false);
 
-  React.useEffect(() => {
-    if (imgRef.current && imgRef.current.complete) {
-      setLoaded(true);
-    }
-  }, [src]);
-
-  if (!src) return null;
+  if (!src || hasError) return null;
 
   return (
     <img
-      ref={imgRef}
       data-slot="avatar-image"
       src={src}
       alt={alt || "Avatar"}
-      onLoad={(e) => {
-        setLoaded(true);
-        if (onLoad) onLoad(e);
-      }}
       onError={(e) => {
-        setLoaded(false);
+        setHasError(true);
         if (onError) onError(e);
       }}
       className={cn(
-        "aspect-square size-full rounded-full object-cover absolute inset-0 z-10 transition-opacity duration-200",
-        loaded ? "opacity-100" : "opacity-0",
+        "aspect-square size-full rounded-full object-cover absolute inset-0 z-10",
         className
       )}
       {...props} />

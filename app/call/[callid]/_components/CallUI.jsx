@@ -25,7 +25,7 @@ import {
 import "stream-chat-react/dist/css/index.css";
 
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Sparkles, Loader2 } from "lucide-react";
+import { MessageSquare, Sparkles, Loader2, X } from "lucide-react";
 import AIQuestionsPanel from "./AIQuestions";
 import { completeBooking } from "@/actions/booking";
 
@@ -114,22 +114,22 @@ export default function CallUI({
   }
 
   return (
-    <div className="min-h-[92vh] bg-[#0a0a0b] flex flex-col overflow-hidden">
+    <div className="min-h-[92vh] bg-[#0a0a0b] flex flex-col overflow-hidden relative">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-3 border-b border-white/8 shrink-0">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between px-4 py-2.5 md:px-6 md:py-3 border-b border-white/8 shrink-0">
+        <div className="flex items-center gap-1.5 md:gap-2 min-w-0">
           <Badge
             variant="outline"
-            className="border-white/10 text-stone-500 text-xs"
+            className="border-white/10 text-stone-500 text-[10px] md:text-xs truncate max-w-[150px] md:max-w-none"
           >
             {booking.interviewer.name}
-            <span className="text-stone-700 mx-1.5">×</span>
+            <span className="text-stone-700 mx-1 md:mx-1.5">×</span>
             {booking.interviewee.name}
           </Badge>
           {isInterviewer && (
             <Badge
               variant="outline"
-              className="border-amber-400/20 bg-amber-400/5 text-amber-400 text-xs"
+              className="border-amber-400/20 bg-amber-400/5 text-amber-400 text-[10px] md:text-xs shrink-0"
             >
               Interviewer
             </Badge>
@@ -139,26 +139,47 @@ export default function CallUI({
         {/* Toggle Panel Button */}
         <button
           onClick={() => setShowPanel(!showPanel)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-medium text-stone-300 transition-colors cursor-pointer"
+          className="flex items-center gap-1 md:gap-1.5 px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-[10px] md:text-xs font-medium text-stone-300 transition-colors cursor-pointer shrink-0"
         >
-          <MessageSquare size={13} className={showPanel ? "text-[#f8b81f]" : ""} />
+          <MessageSquare size={12} className={showPanel ? "text-[#f8b81f]" : ""} />
           <span>{showPanel ? "Hide Panel" : "Show Panel"}</span>
         </button>
       </div>
 
       {/* Body: video + side panel */}
-      <div className="flex flex-col lg:flex-row flex-1 min-h-0">
+      <div className="flex flex-col lg:flex-row flex-1 min-h-0 relative">
         {/* ── LEFT: Video ── */}
-        <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex flex-col flex-1 min-w-0 h-full relative">
           <StreamTheme>
             <SpeakerLayout participantBarPosition="bottom" />
             <CallControls onLeave={handleLeave} />
           </StreamTheme>
         </div>
 
-        {/* ── RIGHT: Chat / AI panel ── */}
+        {/* Scrim Overlay for mobile when panel is open */}
         {showPanel && (
-          <div className="w-full lg:w-[340px] shrink-0 flex flex-col border-t lg:border-t-0 lg:border-l border-white/8 bg-[#0a0a0b] h-[350px] lg:h-auto">
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden"
+            onClick={() => setShowPanel(false)}
+          />
+        )}
+
+        {/* ── RIGHT: Chat / AI panel (Sidebar on desktop, slide-out overlay on mobile) ── */}
+        {showPanel && (
+          <div className="fixed inset-y-0 right-0 z-50 w-[85vw] max-w-[340px] flex flex-col border-l border-white/8 bg-[#0a0a0b] shadow-[0_0_50px_rgba(0,0,0,0.85)] lg:static lg:w-[340px] lg:inset-auto lg:z-0 lg:shadow-none lg:border-t-0 lg:border-l">
+            {/* Panel Mobile Header */}
+            <div className="flex lg:hidden items-center justify-between px-4 py-3 border-b border-white/8 shrink-0">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                <Sparkles size={12} />
+                Session Panel
+              </span>
+              <button 
+                onClick={() => setShowPanel(false)}
+                className="text-stone-400 hover:text-white p-1 rounded bg-white/5 cursor-pointer"
+              >
+                <X size={14} />
+              </button>
+            </div>
             {/* Tab switcher */}
             <div className="flex border-b border-white/8 shrink-0">
               <button
