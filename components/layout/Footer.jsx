@@ -24,8 +24,8 @@ export default function Footer() {
         <div className="container mx-auto px-6 max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/20">
           <p>© {new Date().getFullYear()} PrepWise AI. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
@@ -47,16 +47,33 @@ export default function Footer() {
           <div>
             <h4 className="text-[10px] font-black uppercase tracking-widest text-white mb-6">Product</h4>
             <ul className="space-y-4">
-              {['AI Co-Pilot', 'Performance Analytics', 'Studio Environment', 'Pricing'].map(link => (
-                <li key={link}><Link href="#" className="text-sm font-medium text-white/40 hover:text-amber-400 transition-colors">{link}</Link></li>
+              {[
+                { label: 'Interactive Demo', href: '/#interactive' },
+                { label: 'Platform Features', href: '/#features' },
+                { label: 'Pricing Plans', href: '/pricing' }
+              ].map(link => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-sm font-medium text-white/40 hover:text-amber-400 transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
               ))}
             </ul>
           </div>
           <div>
             <h4 className="text-[10px] font-black uppercase tracking-widest text-white mb-6">Company</h4>
             <ul className="space-y-4">
-              {['About', 'Blog', 'Careers', 'Contact'].map(link => (
-                <li key={link}><Link href="#" className="text-sm font-medium text-white/40 hover:text-amber-400 transition-colors">{link}</Link></li>
+              {[
+                { label: 'About Us', href: '/about' },
+                { label: 'Insights Blog', href: '/blog' },
+                { label: 'Join Our Network', href: '/about#careers' },
+                { label: 'Contact Support', href: '/contact' }
+              ].map(link => (
+                <li key={link.label}>
+                  <Link href={link.href} className="text-sm font-medium text-white/40 hover:text-amber-400 transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
               ))}
             </ul>
           </div>
@@ -64,8 +81,8 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/5 text-xs font-medium text-white/20">
           <p>© {new Date().getFullYear()} PrepWise AI. All rights reserved.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

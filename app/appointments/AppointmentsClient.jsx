@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CalendarOff } from "lucide-react";
+import { CalendarOff, Sparkles } from "lucide-react";
 import { AppointmentCard } from "@/components/AppointmentCard";
 import { FeedbackModal } from "@/components/FeedbackModal";
 import { StarsBackground } from "@/components/animate-ui/components/backgrounds/stars";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 
 import { updateInterviewerProfile, updateInterviewerAvailability } from "@/actions/interviewer";
+import { setupDeveloperTestCall } from "@/actions/call";
 import { CATEGORIES, YEARS_OPTIONS } from "@/lib/data";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -27,10 +29,31 @@ const formatToTimeStr = (dateVal) => {
 };
 
 export default function AppointmentsClient({ appointments, userRole, userName, dbUser }) {
+  const router = useRouter();
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
+
+  const handleDevTestCall = async () => {
+    setIsTesting(true);
+    const id = toast.loading("Setting up developer test call...");
+    try {
+      const res = await setupDeveloperTestCall();
+      if (res.success) {
+        toast.success("Redirecting to call...", { id });
+        router.push(`/call/${res.streamCallId}`);
+      } else {
+        toast.error("Failed to setup developer test call", { id });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || "Failed to setup developer test call", { id });
+    } finally {
+      setIsTesting(false);
+    }
+  };
   
   const now = new Date();
   const isInterviewer = userRole === "INTERVIEWER";
@@ -152,6 +175,15 @@ export default function AppointmentsClient({ appointments, userRole, userName, d
         </div>
         
         <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={handleDevTestCall}
+            disabled={isTesting}
+            className="h-11 px-5 rounded-xl border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 text-amber-400 hover:text-amber-300 transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            <Sparkles size={13} className={isTesting ? "animate-spin" : "animate-pulse"} />
+            Dev Test Call
+          </button>
+
           <div className="flex items-center gap-2 bg-white/[0.02] border border-white/10 px-4 py-2.5 rounded-xl">
             <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest font-black">Upcoming</span>
             <span className="text-xs font-mono font-black text-[#f8b81f] bg-[#f8b81f]/10 px-2.5 py-0.5 rounded-lg border border-[#f8b81f]/20 shadow-[0_0_10px_rgba(248,184,31,0.1)]">
