@@ -28,7 +28,12 @@ export const generateInterviewQuestions = async ({ category, difficulty = "Mediu
 
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-  const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
+  const model = genAI.getGenerativeModel({
+    model: "gemini-3.5-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
 
   const prompt = `
 You are a senior technical interviewer conducting a realistic AI mock interview.
@@ -66,9 +71,14 @@ Do not include markdown, code fences, explanations, or any text outside the JSON
 `;
 
   const result = await model.generateContent(prompt);
-  const text = result.response.text().trim();
-  const clean = text.replace(/^```json|^```|```$/gm, "").trim();
-  const questions = JSON.parse(clean);
+  const text = result.response.text();
+  const firstBracket = text.indexOf("[");
+  const lastBracket = text.lastIndexOf("]");
+  if (firstBracket === -1 || lastBracket === -1) {
+    throw new Error("Gemini response did not contain a valid JSON array: " + text);
+  }
+  const cleanJson = text.slice(firstBracket, lastBracket + 1).trim();
+  const questions = JSON.parse(cleanJson);
 
   return { questions };
 };

@@ -248,33 +248,48 @@ export function AppointmentCard({ booking, mode, isPast = false, onFullFeedback 
         </div>
 
         {/* Action Row */}
-        <div className="grid grid-cols-2 gap-3 mt-auto pt-4 border-t border-white/5 w-full">
-          <Button 
-            variant="outline" 
-            size="lg" 
-            disabled={isLoadingFeedback}
-            onClick={handleOpenFeedback}
-            className="h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/20 transition-all text-white cursor-pointer flex items-center justify-center gap-1.5"
-          >
-            {isLoadingFeedback ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              "AI Feedback"
-            )}
-          </Button>
-          <Button 
-            variant="gold" 
-            size="lg" 
-            disabled={isLoadingRating}
-            onClick={handleOpenRating}
-            className="h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl shadow-[0_6px_20px_rgba(248,184,31,0.2)] hover:scale-[1.01] active:scale-95 transition-all text-black cursor-pointer flex items-center justify-center gap-1.5"
-          >
-            {isLoadingRating ? (
-              <Loader2 className="w-4 h-4 animate-spin text-black" />
-            ) : (
-              "Rating"
-            )}
-          </Button>
+        <div className="flex flex-col gap-3 mt-auto pt-4 border-t border-white/5 w-full">
+          {booking.recordingUrl && (
+            <Button 
+              variant="outline" 
+              size="lg" 
+              asChild
+              className="w-full h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 text-[#f8b81f] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-300"
+            >
+              <a href={booking.recordingUrl} target="_blank" rel="noopener noreferrer">
+                <Video size={14} />
+                Watch Session Recording
+              </a>
+            </Button>
+          )}
+          <div className="grid grid-cols-2 gap-3 w-full">
+            <Button 
+              variant="outline" 
+              size="lg" 
+              disabled={isLoadingFeedback}
+              onClick={handleOpenFeedback}
+              className="h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.08] hover:border-white/20 transition-all text-white cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              {isLoadingFeedback ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "AI Feedback"
+              )}
+            </Button>
+            <Button 
+              variant="gold" 
+              size="lg" 
+              disabled={isLoadingRating}
+              onClick={handleOpenRating}
+              className="h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl shadow-[0_6px_20px_rgba(248,184,31,0.2)] hover:scale-[1.01] active:scale-95 transition-all text-black cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              {isLoadingRating ? (
+                <Loader2 className="w-4 h-4 animate-spin text-black" />
+              ) : (
+                "Rating"
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* AI Feedback Dialog */}
@@ -441,7 +456,20 @@ export function AppointmentCard({ booking, mode, isPast = false, onFullFeedback 
       </div>
 
       {/* Action Row */}
-      <div className="mt-auto pt-4 border-t border-white/5 w-full">
+      <div className="mt-auto pt-4 border-t border-white/5 w-full flex flex-col gap-3">
+        {booking.recordingUrl && (
+          <Button 
+            variant="outline" 
+            size="lg" 
+            asChild
+            className="w-full h-11 text-[11px] font-black uppercase tracking-[0.1em] rounded-xl border border-amber-400/20 bg-amber-400/5 hover:bg-amber-400/10 text-[#f8b81f] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-300"
+          >
+            <a href={booking.recordingUrl} target="_blank" rel="noopener noreferrer">
+              <Video size={14} />
+              Watch Session Recording
+            </a>
+          </Button>
+        )}
         {booking.streamCallId ? (
           <Button 
             variant="gold" 

@@ -1,34 +1,67 @@
 // app/api/webhooks/stream/route.js
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { db } from "@/lib/prisma";
+import zlib from "zlib";
+import { promisify } from "util";
+
+const gunzip = promisify(zlib.gunzip);
+
+export async function GET() {
+  return Response.json({
+    status: "active",
+    message: "PrepWise AI Stream webhook endpoint is online. Only POST requests are processed.",
+  });
+}
 
 export async function POST(request) {
-  const body = await request.json();
-  const eventType = body.type;
-
-  console.log(`\n[stream-webhook] ← Received event: ${eventType}`);
-
-  if (
-    eventType !== "call.transcription_ready" &&
-    eventType !== "call.recording_ready"
-  ) {
-    console.log(`[stream-webhook] Ignoring event type: ${eventType}`);
-    return Response.json({ ok: true });
-  }
-
-  // call_cid arrives as "default:mock_123_abc" — we stored just "mock_123_abc"
-  const callCid = body.call_cid ?? "";
-  const streamCallId = callCid.includes(":") ? callCid.split(":")[1] : callCid;
-  console.log(
-    `[stream-webhook] call_cid: ${callCid} → streamCallId: ${streamCallId}`
-  );
-
-  if (!streamCallId) {
-    console.log(`[stream-webhook] No streamCallId found, skipping`);
-    return Response.json({ ok: true });
-  }
-
   try {
+    const contentEncoding = request.headers.get("content-encoding") || "";
+    
+    let rawBody;
+    if (contentEncoding.includes("gzip")) {
+      console.log(`[stream-webhook] Incoming body is gzip compressed. Decompressing...`);
+      const arrayBuffer = await request.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const decompressed = await gunzip(buffer);
+      rawBody = decompressed.toString("utf-8");
+    } else {
+      rawBody = await request.text();
+    }
+
+    console.log(`[stream-webhook] Raw body preview:\n${rawBody.slice(0, 300)}`);
+
+    let body;
+    try {
+      body = JSON.parse(rawBody);
+    } catch (parseErr) {
+      console.error(`[stream-webhook] Failed to parse request body as JSON:`, parseErr);
+      return Response.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+    }
+
+    const eventType = body.type;
+
+    console.log(`\n[stream-webhook] ← Received event: ${eventType}`);
+
+    if (
+      eventType !== "call.transcription_ready" &&
+      eventType !== "call.recording_ready"
+    ) {
+      console.log(`[stream-webhook] Ignoring event type: ${eventType}`);
+      return Response.json({ ok: true });
+    }
+
+    // call_cid arrives as "default:mock_123_abc" — we stored just "mock_123_abc"
+    const callCid = body.call_cid ?? "";
+    const streamCallId = callCid.includes(":") ? callCid.split(":")[1] : callCid;
+    console.log(
+      `[stream-webhook] call_cid: ${callCid} → streamCallId: ${streamCallId}`
+    );
+
+    if (!streamCallId) {
+      console.log(`[stream-webhook] No streamCallId found, skipping`);
+      return Response.json({ ok: true });
+    }
+
     console.log(`[stream-webhook] Looking up booking in DB...`);
     const booking = await db.booking.findUnique({
       where: { streamCallId },
@@ -147,15 +180,16 @@ export async function POST(request) {
 
       // 3. Generate feedback via Gemini
       console.log(
-        `[stream-webhook] Sending transcript to Gemini (gemini-2.5-flash-lite)...`
+        `[stream-webhook] Sending transcript to Gemini (gemini-3.5-flash)...`
       );
       const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash-lite",
+        model: "gemini-3.5-flash",
+        generationConfig: {
+          responseMimeType: "application/json",
+        },
       });
-      const categories =
-        booking.interviewer.categories?.join(", ") ?? "General";
-
+      const categories = booking.interviewer.categories?.join(", ") ?? "General";
       const prompt = `You are an expert technical interviewer evaluating a mock interview.
 
 Interview categories: ${categories}
@@ -178,11 +212,13 @@ Analyze the candidate's performance. Respond ONLY with a valid JSON object, no m
 }`;
 
       const result = await model.generateContent(prompt);
-      const raw = result.response
-        .text()
-        .trim()
-        .replace(/^```json|^```|```$/gm, "")
-        .trim();
+      const text = result.response.text();
+      const firstBrace = text.indexOf("{");
+      const lastBrace = text.lastIndexOf("}");
+      if (firstBrace === -1 || lastBrace === -1) {
+        throw new Error("Gemini response did not contain a valid JSON object: " + text);
+      }
+      const raw = text.slice(firstBrace, lastBrace + 1).trim();
 
       console.log(
         `[stream-webhook] Gemini raw response:\n${raw.slice(0, 500)}${
@@ -249,8 +285,7 @@ Analyze the candidate's performance. Respond ONLY with a valid JSON object, no m
 
     return Response.json({ ok: true });
   } catch (err) {
-    console.error(`[stream-webhook] ✗ ${eventType} error:`, err);
-    // Always 200 — non-2xx triggers Stream retries, making the race worse
-    return Response.json({ ok: true });
+    console.error(`[stream-webhook] ✗ Webhook handler crashed:`, err);
+    return Response.json({ ok: false, error: err.message }, { status: 500 });
   }
 }

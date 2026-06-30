@@ -208,17 +208,20 @@ export default function CallUI({
       <div className="flex flex-col lg:flex-row flex-1 min-h-0 relative z-10">
         
         {/* ── LEFT: Video feed area with dark radial backdrop ── */}
-        <div className="flex flex-col flex-1 min-w-0 h-full relative bg-[#050506]">
+        <StreamTheme className="h-full w-full flex flex-col flex-1 min-w-0 bg-[#050506] relative overflow-hidden">
           {/* Subtle atmospheric center ambient light */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(248,184,31,0.035)_0%,transparent_70%)] pointer-events-none z-0" />
           
-          <div className="flex-1 min-h-0 relative z-10 p-4">
-            <StreamTheme>
-              <SpeakerLayout participantBarPosition="bottom" />
-              <CallControls onLeave={handleLeave} />
-            </StreamTheme>
+          {/* Video Grid */}
+          <div className="flex-1 min-h-0 relative z-10 p-4 overflow-hidden flex flex-col items-stretch justify-stretch">
+            <SpeakerLayout participantBarPosition="bottom" />
           </div>
-        </div>
+
+          {/* Control Bar - Guaranteed to be visible and unclipped during zoom */}
+          <div className="h-20 shrink-0 border-t border-white/5 bg-black/40 backdrop-blur-md flex items-center justify-center z-20 relative px-4 [&_.str-video__call-controls]:relative [&_.str-video__call-controls]:bottom-0 [&_.str-video__call-controls]:left-0 [&_.str-video__call-controls]:transform-none [&_.str-video__call-controls]:bg-transparent [&_.str-video__call-controls]:border-0">
+            <CallControls onLeave={handleLeave} />
+          </div>
+        </StreamTheme>
 
         {/* Mobile Scrim Backdrop Overlay */}
         {showPanel && (

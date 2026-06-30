@@ -77,7 +77,8 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
   }
   // ──────────────────────────────────────────────────────────────────────────
 
-  // ── Arcjet rate limit ──────────────────────────────────────────────────────
+  // ── Arcjet rate limit (Disabled for development testing) ───────────────────
+  /*
   try {
     const req = await request();
     const rateLimitError = await checkRateLimit(bookingLimiter, req, user.id);
@@ -91,6 +92,7 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
     }
     console.error("Arcjet rate limit check failed (bypassing):", err);
   }
+  */
   // ──────────────────────────────────────────────────────────────────────────
 
   const [dbUser, interviewer] = await Promise.all([
@@ -151,7 +153,7 @@ export const bookSlot = async ({ interviewerId, startTime, endTime }) => {
 
     await call.getOrCreate({
       data: {
-        created_by_id: dbUser.clerkUserId,
+        created_by_id: interviewer.clerkUserId,
         members: [
           { user_id: dbUser.clerkUserId, role: "user" },
           { user_id: interviewer.clerkUserId, role: "host" },

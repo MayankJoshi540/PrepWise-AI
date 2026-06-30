@@ -113,21 +113,7 @@ export default async function DashboardPage() {
               Welcome back, <span className="text-white">{user.name}</span>. Access your scheduled sessions, track credits, and launch practice tools.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <form action={async () => {
-              'use server';
-              const { setupDeveloperTestCall } = await import("@/actions/call");
-              const { redirect } = await import("next/navigation");
-              const res = await setupDeveloperTestCall();
-              if (res.success) {
-                redirect(`/call/${res.streamCallId}`);
-              }
-            }}>
-              <Button type="submit" variant="outline" className="h-12 rounded-xl border-amber-400/20 bg-amber-400/5 text-amber-400 hover:bg-amber-400/10 hover:text-amber-300 uppercase tracking-widest text-xs font-black cursor-pointer">
-                <Sparkles size={14} className="mr-2 animate-pulse text-amber-400" />
-                Dev Test Call
-              </Button>
-            </form>
+          <div className="flex items-center gap-3">
             <Button variant="outline" className="h-12 rounded-xl glass text-white/70 hover:text-white uppercase tracking-widest text-xs font-black" asChild>
               <Link href="/pricing">
                 <ArrowUpCircle size={14} className="mr-2 text-amber-400" />
